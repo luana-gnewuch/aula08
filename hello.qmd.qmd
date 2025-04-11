@@ -1,0 +1,84 @@
+---
+title: "Luana Gnewuch"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(tidyverse)
+library(WDI)
+```
+
+```{r}
+#| label: load-data
+#| include: false
+
+#CÓDIGO DE CARREGAMENTO DOS DADOS
+
+# Coletando dados da população rural para o Brasil ao longo do maior período disponível
+dados_brasil <- WDI(country = "BR", 
+                    indicator = "SP.RUR.TOTL",    # População Rural
+                    start = 1960,  # Ano de início (o maior período possível)
+                    end = 2022)    # Ano final (ou o mais recente disponível)
+
+# Verificando as primeiras linhas dos dados
+head(dados_brasil)
+
+# Coletando dados do Banco Mundial
+dados <- WDI(country = "all", 
+             indicator = c("SP.RUR.TOTL",    # População Rural
+                           "AG.LND.TOTL.K2"),  # Área de terra (km²)
+             start = 2022,  # Ano de início
+             end = 2022)    # Ano final (ou o mais recente disponível)
+
+# Verificando as primeiras linhas dos dados
+head(dados)
+
+options(scipen = 999)
+```
+
+## Gráfico de Série Temporal
+
+O gráfico da série temporal mostra a redução da população rural no Brasil de 1960 a 2020, refletindo o processo de urbanização no país. Ao longo do tempo, a população rural diminui gradualmente, à medida que mais pessoas migraram para as cidades em busca de melhores condições de vida e emprego. O gráfico ilustra esse movimento de transição do campo para a cidade, com algumas oscilações devido a fatores econômicos e políticas públicas, mas a tendência predominante é de queda da população rural.
+
+Referências Bibliográficas: [Indicators \| Data](https://data.worldbank.org/indicator)
+
+```{r}
+#| label: grafico1
+#| warning: false
+#| echo: false
+
+# COLOCAR O CÓDIGO
+
+# Criar o gráfico de série temporal com ggplot2
+ggplot(dados_brasil, aes(x = year, y = SP.RUR.TOTL)) + 
+  geom_line(color = "purple", size = 1) +  # Adicionando linha
+  geom_point(color = "purple", size = 2) + # Adicionando pontos
+  labs(title = "Série Temporal da População Rural no Brasil de 1960-2020",
+       x = "Ano",
+       y = "População Rural (em milhões)") +
+  theme_minimal()  # Usando um tema mais simples
+
+```
+
+## Gráfico Corte Transversal
+
+O gráfico gerado mostra a **relação entre a população rural** e a **área de terra (km²)** de diferentes países no ano de 2022. O gráfico de dispersão utiliza a **população rural** no eixo X e a **área de terra** no eixo Y, representando cada ponto como um país.
+
+```{r}
+#| label: grafico2
+#| warning: false
+#| echo: false
+
+# Criar o gráfico de dispersão com ggplot2
+ggplot(dados, aes(x = SP.RUR.TOTL, y = AG.LND.TOTL.K2)) + 
+  geom_point(color = "purple", size = 3) +  # Adicionando os pontos
+  labs(title = "Relação entre População Rural e Área de Terra (km²) 2022",
+       x = "População Rural",
+       y = "Área de Terra (km²)") +
+  theme_minimal()  # Usando um tema mais simples
+
+```
